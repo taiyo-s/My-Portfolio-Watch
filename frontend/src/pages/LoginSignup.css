@@ -1,0 +1,113 @@
+.container {
+    display: flex;
+    width: 800px;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 200px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.text {
+    color: black;
+    font-size: 36px;
+    font-weight: 600;
+}
+
+.inputs {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    width: 500px;
+    height: 80px;
+    background: #eaeaea;
+    border-radius: 12px;
+}
+
+.input img {
+    margin: 0px 20px;
+    width: 24px;
+    height: auto; 
+}
+
+.input input {
+    height: 50px;
+    width: 10;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.submitContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px auto 10px auto;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
+    width: 180px;
+    height: 50px;
+    background: lightgrey;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.grey {
+    background: grey;
+}
+
+.signupContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.haveOrDontHaveAccount {
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.spinner {
+    border: 4px solid grey;
+    border-left-color: black;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
