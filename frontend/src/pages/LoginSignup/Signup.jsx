@@ -20,7 +20,7 @@ const Signup = ({ setIsAuthenticated }) => {
         setIsLoading(true);
         setErrorMessage('');
         try {
-            const result = await axios.post(process.env.POST_ROUTE_SIGNUP, 
+            const result = await axios.post(process.env.REACT_APP_POST_ROUTE_SIGNUP, 
                 {name: name, username: username, password: password}, { withCredentials: true });
             console.log(result);
             if (result.data.message === "Success") {
