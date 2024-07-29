@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const cryptoCollectionSchema = new Schema({
     // user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     cryptoCollection: [{ type: Schema.Types.ObjectId, ref: 'Crypto' }],
-    overallValue: { type: Number, default: 0}
+    overallValue: [{ type: Number }]
 });
 
 module.exports = mongoose.model('CryptoCollection', cryptoCollectionSchema);
