@@ -24,7 +24,6 @@ app.use(session({
     rolling: true,
     cookie: {
         maxAge: 60 * 60 * 1000,
-        secure: false,
         secure: process.env.NODE_ENV === 'production',
     }
 }));
