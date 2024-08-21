@@ -7,6 +7,7 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     overallValue: [{ type: Number }],
     updatedDates: [{ type: Date }],
+    lastVisit: { type: Date },
     stockCollection: { type: Schema.Types.ObjectId, ref: 'StockCollection' },
     cryptoCollection: { type: Schema.Types.ObjectId, ref: 'CryptoCollection' },
     cs2SkinCollection: { type: Schema.Types.ObjectId, ref: 'CS2SkinCollection' },

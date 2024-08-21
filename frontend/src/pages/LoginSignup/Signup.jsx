@@ -66,7 +66,7 @@ const Signup = ({ setIsAuthenticated }) => {
             {errorMessage && <div className={styles.error}>* {errorMessage}. *</div>} 
             <div className={styles.signupContainer}>
                 <div className={styles.haveOrDontHaveAccount}>
-                    Already have an account? <Link to="/Login">Login</Link>
+                    Already have an account? <Link to="/login">Login</Link>
                 </div>
             </div>
             <div className={styles.submitContainer}>

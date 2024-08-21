@@ -30,7 +30,7 @@ const DashBoard = () => {
 		const fetchUserData = async () => {
 		  	if (username) {
 				try {
-			  		const response = await axios.get(`http://localhost:8000/api/user/${username}`, 
+			  		const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}${username}`, 
 						{ withCredentials: true });
 			  		if (response.data.success) {
 						setName(response.data.name);
@@ -39,7 +39,7 @@ const DashBoard = () => {
 			  		} 
 					else {
 						console.error('Error fetching user name', response.data.message);
-						navigate('/Login');
+						navigate('/login');
 			  		}
 				} 
 				catch (error) {
@@ -52,10 +52,10 @@ const DashBoard = () => {
 
 	const handleLogout = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/logout', 
+            const response = await axios.post(process.env.REACT_APP_POST_ROUTE_LOGOUT, 
 				{}, { withCredentials: true });
             if (response.status === 200) {
-				navigate('/Login');
+				navigate('/login');
             }	
         } catch (error) {
             console.error('Logout failed:', error);
@@ -75,23 +75,35 @@ const DashBoard = () => {
 				<h2 className={styles.greetingText}>Hi {name}</h2>
 			</div>
 			<div className={styles.overallValue}>
-				<div className={styles.overallValueText}>$1200.23</div>
-				<div className={styles.percentageChange}>+$20.12 (12.52%)</div>
+				<div className={styles.overallValueText}>${portfolioValue[0]}</div>
+				<div className={10-8 > 0 ? styles.posPercentageChange : 
+					10-8 < 0 ? styles.negPercentageChange : 
+					styles.noPercentageChange}>+$20.12 (12.52%)</div>
 			</div>
 			<div className={styles.chartContainer}>
 				<Line
+					className={styles.chart}
 					data={{
 						labels: updatedDates.map(date => format(new Date(date), 
 							'MM/dd/yyyy')),
                         datasets: [{ data: portfolioValue }],
                     }}
 					options={{
+						responsive: true,
+						maintainAspectRatio: false,
+						scales: {
+							x: { grid: { display: false } },
+							y: { beginAtZero: true, grid: { display: false } },
+						},
 						plugins: {
-							legend: { display: false, onClick: null },
-							tooltips: {
+							legend: {
+								display: false,
+								onClick: null,
+							},
+							tooltip: {
 								displayColors: false,
-							}
-						}
+							},
+						},
 					}}
 				/>
 			</div>

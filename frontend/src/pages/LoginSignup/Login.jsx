@@ -60,7 +60,7 @@ const Login = ({ setIsAuthenticated }) => {
             {errorMessage && <div className={styles.error}>* {errorMessage}. *</div>}     
             <div className={styles.signupContainer}>
                 <div className={styles.dontHaveAccount}>
-                    Don't have an account? <Link to="/Signup">Sign up</Link>
+                    Don't have an account? <Link to="/signup">Sign up</Link>
                 </div>
             </div>
             <div className={styles.submitContainer}>

@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND,
     credentials: true
 }));
 
@@ -55,7 +55,7 @@ const authenticate = (req, res, next) => {
     }
 };
 
-app.get('/api/user/:username', authenticate, async (req, res) => {
+app.get(process.env.GET_BY_USERNAME, authenticate, async (req, res) => {
     const username = req.params.username;
     try {
         const user = await User.findOne({ username });
@@ -74,7 +74,7 @@ app.get('/api/user/:username', authenticate, async (req, res) => {
 });
 
 // Signup route
-app.post('/signup', async (req, res) => {
+app.post(process.env.POST_SIGNUP, async (req, res) => {
     const { name, username, password } = req.body;
     try {
         const existingUser = await User.findOne({ username });
@@ -85,12 +85,13 @@ app.post('/signup', async (req, res) => {
         const saltRounds = 3;
         const hash = await bcrypt.hash(password, saltRounds);
         const initialValues = [0];
-        const datesArray = [new Date()];
+        const dates = [new Date()];
+        const now = new Date();
         const newStocks = await StockCollectionSchema.create({});
         const newCryptos = await CryptoCollectionSchema.create({});
         const newCS2Skins = await CS2SkinCollectionSchema.create({});
         const newUser = await User.create({ name, username, password: hash, 
-            overallValue: initialValues, updatedDates: datesArray,
+            overallValue: initialValues, updatedDates: dates, lastVisit: now,
             stockCollection: newStocks._id, cryptoCollection: newCryptos._id, 
             cs2SkinCollection: newCS2Skins._id});
 
@@ -105,7 +106,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // Login route
-app.post('/login', async (req, res) => {
+app.post(process.env.POST_LOGIN, async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
@@ -118,6 +119,9 @@ app.post('/login', async (req, res) => {
             const token = jwt.sign({ id: user._id, username: user.username }, 
                 process.env.JWT_SECRET, { expiresIn: '1h' });
             req.session.token = token;
+            const now = new Date();
+            user.lastVisit = now;
+            await user.save();
             res.json({ message: "Success", username });
         } else {
             res.json("Incorrect username or password");
@@ -126,8 +130,21 @@ app.post('/login', async (req, res) => {
         res.json(error.message);
     }
 });
+
+app.get(process.env.GET_SESSION, (req, res) => {
+    const token = req.session.token;
+    if (token) {
+        try {
+            jwt.verify(token, process.env.JWT_SECRET);
+            return res.json({ isAuthenticated: true });
+        } catch (err) {
+            return res.json({ isAuthenticated: false });
+        }
+    }
+    res.json({ isAuthenticated: false });
+});
   
-app.post('/logout', (req, res) => {
+app.post(process.env.POST_LOGOUT, (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             return res.status(500).send('Logout failed');
