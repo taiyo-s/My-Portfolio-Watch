@@ -30,7 +30,7 @@ const DashBoard = () => {
 		const fetchUserData = async () => {
 		  	if (username) {
 				try {
-			  		const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}${username}`, 
+			  		const response = await axios.get(`${process.env.REACT_APP_API_BASE}${username}`, 
 						{ withCredentials: true });
 			  		if (response.data.success) {
 						setName(response.data.name);
@@ -38,7 +38,7 @@ const DashBoard = () => {
 						setUpdatedDates(response.data.updatedDates);
 			  		} 
 					else {
-						console.error('Error fetching user name', response.data.message);
+						console.error('Error fetching username', response.data.message);
 						navigate('/login');
 			  		}
 				} 
