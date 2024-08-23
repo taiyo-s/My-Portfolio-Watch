@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const session = require("express-session");
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
 const jwt = require("jsonwebtoken");
 require('dotenv').config({path: '.env'});
 const User = require("./models/User");
@@ -17,7 +19,18 @@ app.use(cors({
     credentials: true
 }));
 
+const redisClient = redis.createClient({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    // password: process.env.REDIS_PASSWORD // Uncomment if Redis is password protected
+});
+
+redisClient.on('error', (err) => {
+    console.error('Redis error: ', err);
+});
+
 app.use(session({
+    //store: new RedisStore({ client: redisClient }),
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -25,6 +38,7 @@ app.use(session({
     cookie: {
         maxAge: 60 * 60 * 1000,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'None'
     }
 }));
 
