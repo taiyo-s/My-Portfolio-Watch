@@ -20,9 +20,9 @@ app.use(cors({
 }));
 
 const redisClient = redis.createClient({
-    host: process.env.REDIS_HOST || 'localhost',
+    host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT || 6379,
-    // password: process.env.REDIS_PASSWORD // Uncomment if Redis is password protected
+    password: process.env.REDIS_PASSWORD
 });
 
 redisClient.on('error', (err) => {
@@ -30,7 +30,7 @@ redisClient.on('error', (err) => {
 });
 
 app.use(session({
-    //store: new RedisStore({ client: redisClient }),
+    store: new RedisStore({ client: redisClient }),
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
