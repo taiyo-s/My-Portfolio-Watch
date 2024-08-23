@@ -22,12 +22,17 @@ app.use(cors({
 const redisClient = redis.createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT || 6379,
-    password: process.env.REDIS_PASSWORD
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        tls: true, 
+        rejectUnauthorized: false,
+    }
 });
 
 redisClient.on('error', (err) => {
     console.error('Redis error: ', err);
 });
+redisClient.connect().catch(console.error);
 
 app.use(session({
     store: new RedisStore({ client: redisClient }),
