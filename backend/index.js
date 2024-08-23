@@ -41,6 +41,7 @@ const checkSession = (req, res, next) => {
 
 const authenticate = (req, res, next) => {
     const token = req.session.token;
+    console.log(token);
     if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -118,6 +119,7 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
         if (match) {
             const token = jwt.sign({ id: user._id, username: user.username }, 
                 process.env.JWT_SECRET, { expiresIn: '1h' });
+            console.log(token);
             req.session.token = token;
             const now = new Date();
             user.lastVisit = now;
