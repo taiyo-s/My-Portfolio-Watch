@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const session = require("express-session");
-const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis').default;
 const redis = require('redis');
 const jwt = require("jsonwebtoken");
 require('dotenv').config({path: '.env'});
