@@ -1,10 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-const session = require("express-session");
-const RedisStore = require('connect-redis').default;
-const redis = require("redis");
+const axios = require('axios');
 const jwt = require("jsonwebtoken");
+const cookieParser = require('cookie-parser');
 require('dotenv').config({path: '.env'});
 const User = require("./models/User");
 const StockCollectionSchema = require('./models/StockCollection');
@@ -14,53 +13,17 @@ const CS2SkinCollectionSchema = require('./models/CS2SkinCollection');
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use(cookieParser());
+app.use(cookieParser());
 app.use(cors({
     origin: process.env.FRONTEND,
     credentials: true
 }));
 
-const redisClient = redis.createClient({
-    url: process.env.REDIS_URL,
-    socket: {
-        tls: true, 
-        rejectUnauthorized: false,
-    }
-});
-
-redisClient.on('error', (err) => {
-    console.error('Redis error: ', err);
-});
-redisClient.connect()
-    .then(() => console.log('Connected to Redis'))
-    .catch(console.error);
-
-app.use(session({
-    store: new RedisStore({ client: redisClient }),
-    secret: process.env.JWT_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    cookie: {
-        maxAge: 30 * 60 * 1000,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production',
-    }
-}));
-
 const { connectToDatabase } = require("./config/database");
 connectToDatabase();
 
-// Put after the route of a get/post etc, method 
-const checkSession = (req, res, next) => {
-    if (!req.session.token) {
-        return res.status(401).send('Session expired. Please log in again.');
-    }
-    next();
-};
-
-const authenticate = (req, res, next) => {
-    const token = req.session.token;
+function authenticateToken(req, res, next) {
+    const token = req.cookies.token;
     console.log(token);
     if (token) {
         try {
@@ -68,15 +31,15 @@ const authenticate = (req, res, next) => {
             req.user = decoded;
             next();
         } catch (err) {
-            res.status(401).json({ message: 'Token expired or invalid' });
+            res.status(403).json({ message: 'Token expired or invalid' });
         }
     }
     else {
         res.status(401).send('Not authenticated');
     }
-};
+}
 
-app.get(process.env.GET_BY_USERNAME, authenticate, async (req, res) => {
+app.get(process.env.GET_BY_USERNAME, authenticateToken, async (req, res) => {
     const username = req.params.username;
     try {
         const user = await User.findOne({ username });
@@ -116,9 +79,13 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
             stockCollection: newStocks._id, cryptoCollection: newCryptos._id, 
             cs2SkinCollection: newCS2Skins._id});
 
-        const token = jwt.sign({ id: newUser._id }, 
-            process.env.JWT_SECRET, { expiresIn: '1h' });
-        req.session.token = token;
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, 
+            { expiresIn: '15m' });
+        res.cookie('token', token, {
+            httpOnly: true, 
+            maxAge: 20 * 60 * 1000,
+            secure: process.env.NODE_ENV === 'production', 
+        });
         
         res.json({ message: "Success", username: newUser.username });
     } catch (error) {
@@ -137,14 +104,18 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
         
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            const token = jwt.sign({ id: user._id }, 
-                process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, 
+                { expiresIn: '15m' });
             console.log(token);
-            req.session.token = token;
+            res.cookie('token', token, {
+                httpOnly: true, 
+                maxAge: 20 * 60 * 1000,
+                secure: process.env.NODE_ENV === 'production', 
+            });
             const now = new Date();
             user.lastVisit = now;
             await user.save();
-            res.json({ message: "Success", username });
+            res.json({ message: "Success", username: username });
         } else {
             res.json("Incorrect username or password");
         }
@@ -153,8 +124,8 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
     }
 });
 
-app.get(process.env.GET_SESSION, (req, res) => {
-    const token = req.session.token;
+app.get(process.env.GET_TOKEN, (req, res) => {
+    const token = req.cookies.token;
     if (token) {
         try {
             jwt.verify(token, process.env.JWT_SECRET);
@@ -167,12 +138,8 @@ app.get(process.env.GET_SESSION, (req, res) => {
 });
   
 app.post(process.env.POST_LOGOUT, (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).send('Logout failed');
-        }
-        res.json('Logged out');
-    });
+    res.clearCookie('token');
+    res.json('Logged out');
 });
 
 async function reload() {

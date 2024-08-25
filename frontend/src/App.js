@@ -13,7 +13,7 @@ function App() {
     useEffect(() => {
         const verifySession = async () => {
             try {
-                const response = await axios.get(process.env.REACT_APP_GET_SESSION, 
+                const response = await axios.get(process.env.REACT_APP_GET_TOKEN, 
                     { withCredentials: true });
                 setIsAuthenticated(response.data.isAuthenticated)
             } catch (error) {

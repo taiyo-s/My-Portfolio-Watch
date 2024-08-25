@@ -40,11 +40,11 @@ const DashBoard = () => {
 					else {
 						console.error('Error fetching username', response.data.message);
 						navigate('/login');
-			  		}
+					}
 				} 
 				catch (error) {
-			 		console.error('Error fetching user data:', error);
-					//navigate('/login');
+			 		console.error('Error fetching user data:', error);	
+					navigate('/login');					
 				}
 		  	}
 		};
@@ -125,13 +125,14 @@ const DashBoard = () => {
 						<img src={cs2Icon} alt="CS2 Skin Icon" />CS2Skins
 					</div>
 					<div className={tabState === 3 ? `${styles.tab} ${styles.activeTab}` : 
-						styles.tab} onClick={() => toggleTab(3)}>
-						<img src={commoditiesIcon} alt="Commodities Icon" />Commodities
-					</div>
-					<div className={tabState === 4 ? `${styles.tab} ${styles.activeTab}` : 
 						styles.tab} onClick={() => toggleTab(4)}>
 						<img src={currenciesIcon} alt="Currencies Icon" />Currencies
 					</div>
+					<div className={tabState === 4 ? `${styles.tab} ${styles.activeTab}` : 
+						styles.tab} onClick={() => toggleTab(3)}>
+						<img src={commoditiesIcon} alt="Commodities Icon" />Commodities
+					</div>
+
 				</div>
 				<div className={styles.tabContent}>
 					<div className={tabState === 0 ? `${styles.activeContent} ${styles.content}` : 
