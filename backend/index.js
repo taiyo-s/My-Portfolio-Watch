@@ -85,6 +85,7 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
             httpOnly: true, 
             maxAge: 20 * 60 * 1000,
             secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'none',
         });
         
         res.json({ message: "Success", username: newUser.username });
@@ -111,6 +112,7 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
                 httpOnly: true, 
                 maxAge: 20 * 60 * 1000,
                 secure: process.env.NODE_ENV === 'production', 
+                sameSite: 'none',
             });
             const now = new Date();
             user.lastVisit = now;
@@ -142,10 +144,13 @@ app.post(process.env.POST_LOGOUT, (req, res) => {
     res.json('Logged out');
 });
 
+app.get('/', (req, res) => {
+    console.log('Server is up and running!');
+});
+
 async function reload() {
     try {
         const response = await axios.get(process.env.BACKEND_URL);
-        console.log('Reloaded')
     } catch (error) {
         console.error('Error', error);
     }
