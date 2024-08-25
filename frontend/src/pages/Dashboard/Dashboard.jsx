@@ -44,6 +44,7 @@ const DashBoard = () => {
 				} 
 				catch (error) {
 			 		console.error('Error fetching user data:', error);
+					//navigate('/login');
 				}
 		  	}
 		};

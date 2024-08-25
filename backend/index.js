@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const session = require("express-session");
 const RedisStore = require('connect-redis').default;
-const redis = require('redis');
+const redis = require("redis");
 const jwt = require("jsonwebtoken");
 require('dotenv').config({path: '.env'});
 const User = require("./models/User");
@@ -14,15 +14,14 @@ const CS2SkinCollectionSchema = require('./models/CS2SkinCollection');
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+//app.use(cookieParser());
 app.use(cors({
     origin: process.env.FRONTEND,
     credentials: true
 }));
 
 const redisClient = redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT || 6379,
-    password: process.env.REDIS_PASSWORD,
+    url: process.env.REDIS_URL,
     socket: {
         tls: true, 
         rejectUnauthorized: false,
@@ -41,9 +40,8 @@ app.use(session({
     saveUninitialized: false,
     rolling: true,
     cookie: {
-        maxAge: 60 * 60 * 1000,
+        maxAge: 30 * 60 * 1000,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'None'
     }
 }));
 
@@ -115,7 +113,7 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
             stockCollection: newStocks._id, cryptoCollection: newCryptos._id, 
             cs2SkinCollection: newCS2Skins._id});
 
-        const token = jwt.sign({ id: newUser._id, username: newUser.username }, 
+        const token = jwt.sign({ id: newUser._id }, 
             process.env.JWT_SECRET, { expiresIn: '1h' });
         req.session.token = token;
         
@@ -136,7 +134,7 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
         
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            const token = jwt.sign({ id: user._id, username: user.username }, 
+            const token = jwt.sign({ id: user._id }, 
                 process.env.JWT_SECRET, { expiresIn: '1h' });
             console.log(token);
             req.session.token = token;
@@ -173,6 +171,17 @@ app.post(process.env.POST_LOGOUT, (req, res) => {
         res.json('Logged out');
     });
 });
+
+async function reload() {
+    try {
+        const response = await axios.get(process.env.BACKEND_URL);
+        console.log('Reloaded')
+    } catch (error) {
+        console.error('Error', error);
+    }
+}
+
+setInterval(reload, 10 * 60 * 1000) // 10 mins
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

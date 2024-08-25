@@ -15,11 +15,7 @@ function App() {
             try {
                 const response = await axios.get(process.env.REACT_APP_GET_SESSION, 
                     { withCredentials: true });
-                if (response.data.isAuthenticated) {
-                    setIsAuthenticated(true);
-                } else {
-                    setIsAuthenticated(false);
-                }
+                setIsAuthenticated(response.data.isAuthenticated)
             } catch (error) {
                 setIsAuthenticated(false);
                 console.error('Error verifying session:', error);
