@@ -144,19 +144,19 @@ app.post(process.env.POST_LOGOUT, (req, res) => {
     res.json('Logged out');
 });
 
-app.get('/', (req, res) => {
+app.get(process.env.PING, (req, res) => {
     console.log('Server is up and running!');
 });
 
-async function reload() {
+async function ping() {
     try {
-        const response = await axios.get(process.env.BACKEND_URL);
+        const response = await axios.get(process.env.PING_URL);
     } catch (error) {
         console.error('Error', error);
     }
 }
 
-setInterval(reload, 10 * 60 * 1000) // 10 mins
+setInterval(ping, 10 * 60 * 1000) // 10 mins
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
