@@ -157,7 +157,7 @@ const ping = async () => {
     }
 };
 
-setInterval(ping, 1 * 60 * 1000);
+setInterval(ping, 5 * 60 * 1000);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
