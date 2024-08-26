@@ -125,11 +125,11 @@ const DashBoard = () => {
 						<img src={cs2Icon} alt="CS2 Skin Icon" />CS2Skins
 					</div>
 					<div className={tabState === 3 ? `${styles.tab} ${styles.activeTab}` : 
-						styles.tab} onClick={() => toggleTab(4)}>
+						styles.tab} onClick={() => toggleTab(3)}>
 						<img src={currenciesIcon} alt="Currencies Icon" />Currencies
 					</div>
 					<div className={tabState === 4 ? `${styles.tab} ${styles.activeTab}` : 
-						styles.tab} onClick={() => toggleTab(3)}>
+						styles.tab} onClick={() => toggleTab(4)}>
 						<img src={commoditiesIcon} alt="Commodities Icon" />Commodities
 					</div>
 
