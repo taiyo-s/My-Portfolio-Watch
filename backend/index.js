@@ -149,15 +149,15 @@ app.get(process.env.PING, (req, res) => {
     console.log('Server is up and running');
 });
 
-const ping = async () => {
-    try {
-        await axios.get(process.env.PING_URL);
-    } catch (error) {
-        console.error('Error pinging the server:', error);
-    }
-};
+// const ping = async () => {
+//     try {
+//         await axios.get(process.env.PING_URL);
+//     } catch (error) {
+//         console.error('Error pinging the server:', error);
+//     }
+// };
 
-setInterval(ping, 5 * 60 * 1000);
+// setInterval(ping, 5 * 60 * 1000);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
