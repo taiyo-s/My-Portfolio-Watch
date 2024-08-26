@@ -23,19 +23,7 @@ function App() {
                 setIsLoading(false);
             }
         };
-
-        const ping = async () => {
-            try {
-                await axios.get(process.env.REACT_APP_PING_URL);
-            } catch (error) {
-                console.error('Error pinging the server:', error);
-            }
-        };
-
         verifySession();
-
-        const pingInterval = setInterval(ping, 12 * 60 * 1000);
-        return () => clearInterval(pingInterval);
     }, []);
     
     if (isLoading) {

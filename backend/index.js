@@ -9,6 +9,7 @@ const User = require("./models/User");
 const StockCollectionSchema = require('./models/StockCollection');
 const CryptoCollectionSchema = require('./models/CryptoCollection');
 const CS2SkinCollectionSchema = require('./models/CS2SkinCollection');
+const isProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 app.use(express.json());
@@ -84,8 +85,8 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true, 
             maxAge: 20 * 60 * 1000,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: 'none',
+            secure: isProduction, 
+            sameSite: isProduction ? 'None' : 'Lax',
         });
         
         res.json({ message: "Success", username: newUser.username });
@@ -111,8 +112,8 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
             res.cookie('token', token, {
                 httpOnly: true, 
                 maxAge: 20 * 60 * 1000,
-                secure: process.env.NODE_ENV === 'production', 
-                sameSite: 'none',
+                secure: isProduction, 
+                sameSite: isProduction ? 'None' : 'Lax',
             });
             const now = new Date();
             user.lastVisit = now;
@@ -147,6 +148,16 @@ app.post(process.env.POST_LOGOUT, (req, res) => {
 app.get(process.env.PING, (req, res) => {
     console.log('Server is up and running');
 });
+
+const ping = async () => {
+    try {
+        await axios.get(process.env.PING_URL);
+    } catch (error) {
+        console.error('Error pinging the server:', error);
+    }
+};
+
+setInterval(ping, 1 * 60 * 1000);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
