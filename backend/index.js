@@ -146,6 +146,7 @@ app.post(process.env.POST_LOGOUT, (req, res) => {
 });
 
 app.head(process.env.PING, (req, res) => {
+    console.log('Server is up and running');
     res.status(200).end();
 });
 
