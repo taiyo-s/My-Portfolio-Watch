@@ -77,7 +77,7 @@ const DashBoard = () => {
 				<h2 className={styles.greetingText}>Hi {name}</h2>
 			</div>
 			<div className={styles.overallValue}>
-				<div className={styles.overallValueText}>${portfolioValue[0].toFixed(2)}</div>
+				<div className={styles.overallValueText}>${portfolioValue[0] ? (portfolioValue[0]).toFixed(2) : 0}</div>
 				{change > 0 ? (
   					<div className={styles.posPercentageChange}>
     					+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%)
