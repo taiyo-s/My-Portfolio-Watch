@@ -17,8 +17,9 @@ defaults.responsive = true;
 const DashBoard = () => {
 	const username = localStorage.getItem('username');
 	const [name, setName] = useState();
-	const [portfolioValue, setPortfolioValue] = useState([]);
-	const [updatedDates, setUpdatedDates] = useState([]);
+	const [portfolioValue, setPortfolioValue] = useState(0);
+	const [valueHistory, setValueHistory] = useState([]);
+	const [updatedAt, setUpdatedAt] = useState([]);
 	const [tabState, setTabstate] = useState(0);
 	const navigate = useNavigate();
 	const change = 0;
@@ -36,7 +37,8 @@ const DashBoard = () => {
 			  		if (response.data.success) {
 						setName(response.data.name);
 						setPortfolioValue(response.data.portfolioValue);
-						setUpdatedDates(response.data.updatedDates);
+						setValueHistory(response.data.valueHistory);
+						setUpdatedAt(response.data.updatedAt);
 			  		} 
 					else {
 						console.error('Error fetching username', response.data.message);
@@ -77,7 +79,7 @@ const DashBoard = () => {
 				<h2 className={styles.greetingText}>Hi {name}</h2>
 			</div>
 			<div className={styles.overallValue}>
-				<div className={styles.overallValueText}>${portfolioValue ? (portfolioValue).toFixed(2) : 0.00}</div>
+				<div className={styles.overallValueText}>${(portfolioValue).toFixed(2)}</div>
 				{change > 0 ? (
   					<div className={styles.posPercentageChange}>
     					+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%)
@@ -96,9 +98,9 @@ const DashBoard = () => {
 				<div className={styles.lineChart}>
 					<Line
 						data={{
-							labels: updatedDates.map(date => format(new Date(date), 
-								'MM/dd/yyyy')),
-							datasets: [{ data: portfolioValue }],
+							labels: updatedAt.map(date => format(new Date(date), 
+								'dd/MM/yyyy')),
+							datasets: [{ data: valueHistory }],
 						}}
 						options={{
 							responsive: true,

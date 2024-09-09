@@ -47,7 +47,8 @@ app.get(process.env.GET_BY_USERNAME, authenticateToken, async (req, res) => {
 
         if (user) {
             res.json({ success: true, name: user.name, 
-                portfolioValue: user.overallValue, updatedDates: user.updatedDates});
+                portfolioValue: user.overallValue, valueHistory: user.valueHistory,
+                updatedAt: user.updatedAt});
         } 
         else {
             res.status(404).json({ message: 'User not found' });
