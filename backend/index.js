@@ -145,7 +145,7 @@ app.post(process.env.POST_LOGOUT, (req, res) => {
     res.json('Logged out');
 });
 
-cron.schedule('0 0-12/2 * * *', () => {
+cron.schedule('0 */2 * * *', () => {
     console.log('cron job');
 });
 
