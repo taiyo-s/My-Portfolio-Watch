@@ -69,16 +69,17 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
 
         const saltRounds = 3;
         const hash = await bcrypt.hash(password, saltRounds);
-        const initialValues = [0];
+        const initialValue = 0;
+        const startValue = 0;
         const dates = [new Date()];
         const now = new Date();
         const newStocks = await StockCollectionSchema.create({});
         const newCryptos = await CryptoCollectionSchema.create({});
         const newCS2Skins = await CS2SkinCollectionSchema.create({});
         const newUser = await User.create({ name, username, password: hash, 
-            overallValue: initialValues, updatedDates: dates, lastVisit: now,
-            stockCollection: newStocks._id, cryptoCollection: newCryptos._id, 
-            cs2SkinCollection: newCS2Skins._id});
+            overallValue: initialValue, startValue: startValue, valueHistory: valueHistory, 
+            updatedAt: dates, lastVisit: now, stockCollection: newStocks._id, 
+            cryptoCollection: newCryptos._id, cs2SkinCollection: newCS2Skins._id});
 
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, 
             { expiresIn: '15m' });
