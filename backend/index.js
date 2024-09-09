@@ -71,6 +71,7 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
         const hash = await bcrypt.hash(password, saltRounds);
         const initialValue = 0;
         const startValue = 0;
+        const valueHistory = [0];
         const dates = [new Date()];
         const now = new Date();
         const newStocks = await StockCollectionSchema.create({});

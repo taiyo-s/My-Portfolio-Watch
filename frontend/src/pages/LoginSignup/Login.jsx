@@ -57,7 +57,7 @@ const Login = ({ setIsAuthenticated }) => {
                         autoComplete="off" required/>
                 </div>
             </div>
-            {errorMessage && <div className={styles.error}>* {errorMessage}. Try Again in a Minute. *</div>}     
+            {errorMessage && <div className={styles.error}>* {errorMessage}. *</div>}     
             <div className={styles.signupContainer}>
                 <div className={styles.dontHaveAccount}>
                     Don't have an account? <Link to="/signup">Sign up</Link>
