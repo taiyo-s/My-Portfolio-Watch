@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from "./Dashboard.module.css";
 import { Chart as defaults } from "chart.js/auto"
-import { Line } from "react-chartjs-2"
+import { Line, Pie } from "react-chartjs-2"
 import { format } from 'date-fns';
 import logo from "../../assets/logo.png";
 import stocksIcon from "../../assets/stocks.png";
@@ -21,6 +21,7 @@ const DashBoard = () => {
 	const [updatedDates, setUpdatedDates] = useState([]);
 	const [tabState, setTabstate] = useState(0);
 	const navigate = useNavigate();
+	const change = 0;
 
 	const toggleTab = (tabNum) => {
 		setTabstate(tabNum);
@@ -76,37 +77,74 @@ const DashBoard = () => {
 				<h2 className={styles.greetingText}>Hi {name}</h2>
 			</div>
 			<div className={styles.overallValue}>
-				<div className={styles.overallValueText}>${portfolioValue[0]}</div>
-				<div className={10-8 > 0 ? styles.posPercentageChange : 
-					10-8 < 0 ? styles.negPercentageChange : 
-					styles.noPercentageChange}>+$20.12 (12.52%)</div>
+				<div className={styles.overallValueText}>${portfolioValue[0].toFixed(2)}</div>
+				{change > 0 ? (
+  					<div className={styles.posPercentageChange}>
+    					+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%)
+  					</div>
+					) : change < 0 ? (
+  					<div className={styles.negPercentageChange}>
+    					-${Math.abs(change).toFixed(2)} ({((100 * change)/88).toFixed(2)}%)
+  					</div>
+					) : (
+  					<div className={styles.noPercentageChange}>
+    					+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%)
+  					</div>
+				)}
 			</div>
 			<div className={styles.chartContainer}>
-				<Line
-					className={styles.chart}
-					data={{
-						labels: updatedDates.map(date => format(new Date(date), 
-							'MM/dd/yyyy')),
-                        datasets: [{ data: portfolioValue }],
-                    }}
-					options={{
-						responsive: true,
-						maintainAspectRatio: false,
-						scales: {
-							x: { grid: { display: false } },
-							y: { beginAtZero: true, grid: { display: false } },
-						},
-						plugins: {
-							legend: {
-								display: false,
-								onClick: null,
+				<div className={styles.lineChart}>
+					<Line
+						data={{
+							labels: updatedDates.map(date => format(new Date(date), 
+								'MM/dd/yyyy')),
+							datasets: [{ data: portfolioValue }],
+						}}
+						options={{
+							responsive: true,
+							maintainAspectRatio: false,
+							scales: {
+								x: { grid: { display: false } },
+								y: { beginAtZero: true, grid: { display: false } },
 							},
-							tooltip: {
-								displayColors: false,
+							plugins: {
+								legend: {
+									display: false,
+									onClick: null,
+								},
+								tooltip: {
+									displayColors: false,
+								},
 							},
-						},
-					}}
-				/>
+						}}
+					/>
+				</div>
+				<div className={styles.pieChart}>
+					<Pie
+						data={{
+							labels: ['Stocks', 'Crypto', 'CS2 Skins', 'Currencies', 'Commodities'],
+							datasets: [
+								{
+									label: 'Value of Holdings',
+									data: [7, 5, 8, 3, 4],
+									backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+								},
+							],
+						}}
+						options={{
+							responsive: true,
+							maintainAspectRatio: false,
+							plugins: {
+								legend: {
+									onClick: null,
+								},
+								tooltip: {
+									displayColors: false,
+								},
+							},
+						}}
+					/>
+				</div>
 			</div>
 			
 			

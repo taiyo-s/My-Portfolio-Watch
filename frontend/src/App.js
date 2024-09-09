@@ -8,7 +8,6 @@ import axios from 'axios';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const verifySession = async () => {
@@ -19,16 +18,10 @@ function App() {
             } catch (error) {
                 setIsAuthenticated(false);
                 console.error('Error verifying session:', error);
-            } finally {
-                setIsLoading(false);
             }
         };
         verifySession();
     }, []);
-    
-    if (isLoading) {
-        return;
-    }
 
     return (
         <Router>

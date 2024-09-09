@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-const axios = require('axios');
+const cron = require('node-cron');
 const jwt = require("jsonwebtoken");
 const cookieParser = require('cookie-parser');
 require('dotenv').config({path: '.env'});
@@ -143,6 +143,10 @@ app.get(process.env.GET_TOKEN, (req, res) => {
 app.post(process.env.POST_LOGOUT, (req, res) => {
     res.clearCookie('token');
     res.json('Logged out');
+});
+
+cron.schedule('0 0-12/2 * * *', () => {
+    console.log('cron job');
 });
 
 app.head(process.env.PING, (req, res) => {
