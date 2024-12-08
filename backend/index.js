@@ -14,7 +14,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(cors({
     origin: process.env.FRONTEND,
     credentials: true
@@ -24,13 +23,14 @@ const { connectToDatabase } = require("./config/database");
 connectToDatabase();
 
 function authenticateToken(req, res, next) {
-    const token = req.cookies.token;
-    console.log(token);
-    if (token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        console.log(token);
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = decoded;
-            next();
+            req.userId = decoded.userId; 
+            next(); 
         } catch (err) {
             res.status(403).json({ message: 'Token expired or invalid' });
         }
@@ -40,11 +40,25 @@ function authenticateToken(req, res, next) {
     }
 }
 
-app.get(process.env.GET_BY_USERNAME, authenticateToken, async (req, res) => {
-    const username = req.params.username;
-    try {
-        const user = await User.findOne({ username });
+app.get(process.env.GET_TOKEN, (req, res) => {
+    const token = req.headers['authorization']; 
+    if (token && token.startsWith('Bearer ')) {
+        const jwtToken = token.split(' ')[1]; 
+        console.log(jwtToken);
+        try {
+            jwt.verify(jwtToken, process.env.JWT_SECRET);
+            return res.json({ isAuthenticated: true });
+        } catch (err) {
+            return res.json({ isAuthenticated: false });
+        }
+    }
+    res.json({ isAuthenticated: false });
+});
 
+app.get(process.env.GET_USER_DATA, authenticateToken, async (req, res) => {
+    const userId = req.userId;
+    try {
+        const user = await User.findById(userId)
         if (user) {
             res.json({ success: true, name: user.name, 
                 portfolioValue: user.overallValue, valueHistory: user.valueHistory,
@@ -83,16 +97,10 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
             updatedAt: dates, lastVisit: now, stockCollection: newStocks._id, 
             cryptoCollection: newCryptos._id, cs2SkinCollection: newCS2Skins._id});
 
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, 
+        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, 
             { expiresIn: '15m' });
-        res.cookie('token', token, {
-            httpOnly: true, 
-            maxAge: 20 * 60 * 1000,
-            secure: isProduction, 
-            sameSite: isProduction ? 'None' : 'Lax',
-        });
         
-        res.json({ message: "Success", username: newUser.username });
+        res.json({ token: token, message: "Success" });
     } catch (error) {
         res.json(error.message);
     }
@@ -109,43 +117,18 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
         
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, 
+            const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, 
                 { expiresIn: '15m' });
-            console.log(token);
-            res.cookie('token', token, {
-                httpOnly: true, 
-                maxAge: 20 * 60 * 1000,
-                secure: isProduction, 
-                sameSite: isProduction ? 'None' : 'Lax',
-            });
             const now = new Date();
             user.lastVisit = now;
             await user.save();
-            res.json({ message: "Success", username: username });
+            res.json({ token: token, message: "Success" });
         } else {
             res.json("Incorrect username or password");
         }
     } catch (error) {
         res.json(error.message);
     }
-});
-
-app.get(process.env.GET_TOKEN, (req, res) => {
-    const token = req.cookies.token;
-    if (token) {
-        try {
-            jwt.verify(token, process.env.JWT_SECRET);
-            return res.json({ isAuthenticated: true });
-        } catch (err) {
-            return res.json({ isAuthenticated: false });
-        }
-    }
-    res.json({ isAuthenticated: false });
-});
-  
-app.post(process.env.POST_LOGOUT, (req, res) => {
-    res.clearCookie('token');
-    res.json('Logged out');
 });
 
 cron.schedule('0 */2 * * *', () => {

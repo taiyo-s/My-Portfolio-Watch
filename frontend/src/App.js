@@ -8,20 +8,31 @@ import axios from 'axios';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const verifySession = async () => {
+            const token = localStorage.getItem('authToken');
             try {
-                const response = await axios.get(process.env.REACT_APP_GET_TOKEN, 
-                    { withCredentials: true });
+                const response = await axios.get(process.env.REACT_APP_GET_TOKEN, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, 
+                    },
+                });
                 setIsAuthenticated(response.data.isAuthenticated)
             } catch (error) {
                 setIsAuthenticated(false);
                 console.error('Error verifying session:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         verifySession();
     }, []);
+
+    if (isLoading) {
+        return;
+    }
 
     return (
         <Router>

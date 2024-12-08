@@ -5,6 +5,7 @@ import axios from 'axios'
 import styles from "./LoginSignup.module.css";
 import passwordIcon from "../../assets/password.png";
 import usernameIcon from "../../assets/username.png";
+import logo from "../../assets/logo.png";
 
 const Login = ({ setIsAuthenticated }) => {
     const [username, setUsername] = useState();
@@ -22,7 +23,8 @@ const Login = ({ setIsAuthenticated }) => {
                 {username: username, password: password}, { withCredentials: true });
             console.log(result);
             if (result.data.message === "Success") {
-                localStorage.setItem('username', result.data.username);
+                localStorage.setItem('userId', result.data.userId);
+                localStorage.setItem('authToken', result.data.token);
                 setIsAuthenticated(true);
                 navigate('/');
             } else if (result.data === 'Incorrect username or password') {
@@ -40,6 +42,10 @@ const Login = ({ setIsAuthenticated }) => {
 
     return (
         <div className={styles.container}>
+			<div className={styles.brandContainer}>
+        		<img src={logo} alt="My Portfolio Watch Logo" />
+        		<div className={styles.brandText}>My Portfolio Watch</div>
+    		</div>
             <div className={styles.header}>
                 <div className={styles.text}>Login</div>
             </div>

@@ -6,6 +6,7 @@ import axios from 'axios'
 import nameIcon from "../../assets/name.png";
 import passwordIcon from "../../assets/password.png";
 import usernameIcon from "../../assets/username.png";
+import logo from "../../assets/logo.png";
 
 const Signup = ({ setIsAuthenticated }) => {
     const [name, setName] = useState()
@@ -24,7 +25,7 @@ const Signup = ({ setIsAuthenticated }) => {
                 {name: name, username: username, password: password}, { withCredentials: true });
             console.log(result);
             if (result.data.message === "Success") {
-                localStorage.setItem('username', result.data.username);
+                localStorage.setItem('authToken', result.data.token);
                 setIsAuthenticated(true);
                 navigate('/');
             } else if (result.data === 'Username is already taken') {
@@ -41,6 +42,10 @@ const Signup = ({ setIsAuthenticated }) => {
 
     return (
         <div className={styles.container}>
+        	<div className={styles.brandContainer}>
+        		<img src={logo} alt="My Portfolio Watch Logo" />
+        		<div className={styles.brandText}>My Portfolio Watch</div>
+    		</div>
             <div className={styles.header}>
                 <div className={styles.text}>Sign Up</div>
             </div>

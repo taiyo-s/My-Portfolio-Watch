@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import styles from "./Dashboard.module.css";
 import { Chart as defaults } from "chart.js/auto"
 import { Line, Pie } from "react-chartjs-2"
@@ -10,13 +10,14 @@ import cryptoIcon from "../../assets/crypto.png";
 import cs2Icon from "../../assets/cs2.png";
 import commoditiesIcon from "../../assets/commodities.png";
 import currenciesIcon from "../../assets/currencies.png";
+import binIcon from "../../assets/bin.png";
 import axios from 'axios';
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
 
 const DashBoard = () => {
-	const username = localStorage.getItem('username');
-	const [name, setName] = useState();
+	const token = localStorage.getItem('authToken');
+	const [name, setName] = useState('');
 	const [portfolioValue, setPortfolioValue] = useState(0);
 	const [valueHistory, setValueHistory] = useState([]);
 	const [updatedAt, setUpdatedAt] = useState([]);
@@ -30,10 +31,13 @@ const DashBoard = () => {
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-		  	if (username) {
+		  	if (token) {
 				try {
-			  		const response = await axios.get(`${process.env.REACT_APP_API_BASE}${username}`, 
-						{ withCredentials: true });
+					const response = await axios.get(process.env.REACT_APP_API_BASE, {
+						headers: {
+							'Authorization': `Bearer ${token}`, 
+						},
+					});
 			  		if (response.data.success) {
 						setName(response.data.name);
 						setPortfolioValue(response.data.portfolioValue);
@@ -50,20 +54,16 @@ const DashBoard = () => {
 					navigate('/login');					
 				}
 		  	}
+			else {
+				navigate('/login');	
+			}
 		};
 		fetchUserData();
-	}, [navigate, username]); 
+	}, [navigate, token]); 
 
-	const handleLogout = async () => {
-        try {
-            const response = await axios.post(process.env.REACT_APP_POST_ROUTE_LOGOUT, 
-				{}, { withCredentials: true });
-            if (response.status === 200) {
-				navigate('/login');
-            }	
-        } catch (error) {
-            console.error('Logout failed:', error);
-        }
+	const handleLogout = () => {
+		localStorage.removeItem('authToken');
+		navigate('/login');
     };
 
     return (
@@ -148,7 +148,15 @@ const DashBoard = () => {
 					/>
 				</div>
 			</div>
-			
+
+			<div className={styles.addRemove}>
+				<button className={styles.addButton}>
+					<span>+</span> Add
+				</button>
+				<button className={styles.removeButton}>
+					<img src={binIcon} alt="Remove" className={styles.binIcon} /> Remove
+				</button>
+			</div>
 			
 			<div className={styles.tabsContainer}>
 				<div className={styles.blockTabs}>
@@ -185,6 +193,13 @@ const DashBoard = () => {
 						styles.content}>Hi 3</div>
 					<div className={tabState === 4 ? `${styles.activeContent} ${styles.content}` : 
 						styles.content}>Hi 4</div>
+				</div>
+			</div>
+			<div className={styles.footer}>
+				<div className={styles.footerLinks}>
+					<Link to="/about-us" className={styles.footerLink}>About Us</Link>
+					<Link to="/contact" className={styles.footerLink}>Contact</Link>
+					<Link to="/faq" className={styles.footerLink}>FAQ</Link>
 				</div>
 			</div>
 		</div>
