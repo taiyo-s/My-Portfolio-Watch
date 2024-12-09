@@ -23,7 +23,12 @@ const DashBoard = () => {
 	const [updatedAt, setUpdatedAt] = useState([]);
 	const [tabState, setTabstate] = useState(0);
 	const navigate = useNavigate();
+	const [isModalOpen, setModalOpen] = useState(false);
+
 	const change = 0;
+
+	const openModal = () => setModalOpen(true);
+	const closeModal = () => setModalOpen(false);
 
 	const toggleTab = (tabNum) => {
 		setTabstate(tabNum);
@@ -150,12 +155,24 @@ const DashBoard = () => {
 			</div>
 
 			<div className={styles.addRemove}>
-				<button className={styles.addButton}>
+				<button className={styles.addButton} onClick={openModal}>
 					<span>+</span> Add
 				</button>
 				<button className={styles.removeButton}>
 					<img src={binIcon} alt="Remove" className={styles.binIcon} /> Remove
 				</button>
+			{isModalOpen && (
+				<div className={styles.modalOverlay}>
+					<div className={styles.modal}>
+						<button className={styles.closeButton} onClick={closeModal}>
+						&times;
+						</button>
+						<div className={styles.modalContent}>
+						{/* modal content here */}
+						</div>
+					</div>
+				</div>
+			)}
 			</div>
 			
 			<div className={styles.tabsContainer}>

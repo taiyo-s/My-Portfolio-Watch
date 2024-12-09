@@ -1,0 +1,52 @@
+.container {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+  
+.header {
+    margin-bottom: 20px;
+}
+  
+.returnLink {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+  
+.returnLink:hover {
+    text-decoration: underline;
+}
+  
+.mainContent h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+  
+.mainContent p {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+}
+  
+.contactList {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+  
+.contactList li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+  
+.contactLink {
+    text-decoration: none;
+    color: #007bff; 
+}
+  
+.contactLink:hover {
+    text-decoration: underline;
+}

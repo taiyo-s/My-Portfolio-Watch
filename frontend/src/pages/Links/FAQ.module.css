@@ -1,0 +1,75 @@
+.container {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+  
+.header {
+    margin-bottom: 20px;
+}
+  
+.returnLink {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+  
+.returnLink:hover {
+    text-decoration: underline;
+}
+  
+.mainContent h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+  
+.faqList {
+    margin-bottom: 30px;
+}
+  
+.faqItem {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+  
+.questionButton {
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 1.1rem;
+    color: #333;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.arrow {
+    font-size: 1.2rem;
+    color: #333;
+}
+  
+.answer {
+    margin-top: 5px;
+    padding-left: 20px;
+    color: #333;
+}
+  
+.contactSection h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+  
+.contactLink {
+    text-decoration: none;
+    color: #007bff;
+}
+  
+.contactLink:hover {
+    text-decoration: underline;
+}

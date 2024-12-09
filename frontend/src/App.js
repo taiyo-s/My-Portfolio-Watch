@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from "./pages/LoginSignup/Login";
 import Signup from './pages/LoginSignup/Signup';
 import DashBoard from "./pages/Dashboard/Dashboard";
+import AboutUs from './pages/Links/AboutUs';
+import Contact from './pages/Links/Contact';
+import FAQ from './pages/Links/FAQ';
 import axios from 'axios';
 
 function App() {
@@ -38,6 +41,9 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={isAuthenticated ? <DashBoard /> : <Navigate to="/login" />} />
+                <Route path="/about-us" element={isAuthenticated ? <AboutUs /> : <Navigate to="/login" />} />
+                <Route path="/contact" element={isAuthenticated ? <Contact /> : <Navigate to="/login" />} />
+                <Route path="/faq" element={isAuthenticated ? <FAQ /> : <Navigate to="/login" />} />
                 <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                 <Route path="/signup" element={<Signup setIsAuthenticated={setIsAuthenticated} />} />
             </Routes>

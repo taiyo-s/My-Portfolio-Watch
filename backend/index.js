@@ -26,7 +26,6 @@ function authenticateToken(req, res, next) {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
         const token = authHeader.split(' ')[1];
-        console.log(token);
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.userId = decoded.userId; 
@@ -44,7 +43,6 @@ app.get(process.env.GET_TOKEN, (req, res) => {
     const token = req.headers['authorization']; 
     if (token && token.startsWith('Bearer ')) {
         const jwtToken = token.split(' ')[1]; 
-        console.log(jwtToken);
         try {
             jwt.verify(jwtToken, process.env.JWT_SECRET);
             return res.json({ isAuthenticated: true });
@@ -99,7 +97,7 @@ app.post(process.env.POST_SIGNUP, async (req, res) => {
 
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, 
             { expiresIn: '15m' });
-        
+        console.log(username + " signed up");
         res.json({ token: token, message: "Success" });
     } catch (error) {
         res.json(error.message);
@@ -122,6 +120,7 @@ app.post(process.env.POST_LOGIN, async (req, res) => {
             const now = new Date();
             user.lastVisit = now;
             await user.save();
+            console.log(username + " logged in");
             res.json({ token: token, message: "Success" });
         } else {
             res.json("Incorrect username or password");
