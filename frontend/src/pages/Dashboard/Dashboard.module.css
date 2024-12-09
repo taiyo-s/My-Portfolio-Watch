@@ -190,7 +190,6 @@
 .tab {
     flex: 1;
     max-width: 140px;
-    min-width: 80px;
     padding: 10px;
     background-color: white;
     border: 1px solid #ccc;   
@@ -201,6 +200,7 @@
     font-weight: 600;
     display: flex;
     align-items: center;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
@@ -312,8 +312,14 @@
     right: 10px;
     background: none;
     border: none;
+    border-radius: 5px;
     font-size: 20px;
     cursor: pointer;
+}
+
+.closeButton:active {
+    border: 1px solid black; 
+    transform: scale(0.95); 
 }
   
 .modalContent {
