@@ -4,6 +4,8 @@
     background-color: white;
     padding: 0px;
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
 }
 
 .header {
@@ -100,6 +102,17 @@
     padding: 20px 0px;
 }
 
+@media (max-width: 768px) {
+    .chartContainer {
+        flex-direction: column;
+        margin: 0;
+    }
+    .lineChart, .pieChart {
+        width: 100%;
+        height: auto;
+    }
+}
+
 .lineChart {
     width: 70%; 
     height: 100%;  
@@ -171,10 +184,12 @@
 
 .blockTabs {
     display: flex;
+    width: 100%;
 }
 
 .tab {
     width: 140px;
+    max-width: 100%;
     padding: 10px;
     background-color: white;
     border: 1px solid #ccc;   
