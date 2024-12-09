@@ -188,8 +188,9 @@
 }
 
 .tab {
-    width: 140px;
-    max-width: 100%;
+    flex: 1;
+    max-width: 140px;
+    min-width: 80px;
     padding: 10px;
     background-color: white;
     border: 1px solid #ccc;   
@@ -200,6 +201,18 @@
     font-weight: 600;
     display: flex;
     align-items: center;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .blockTabs {
+        justify-content: space-between;
+    }
+
+    .tab {
+        flex: 1 1 auto;
+        max-width: unset;
+    }
 }
 
 .activeTab {
