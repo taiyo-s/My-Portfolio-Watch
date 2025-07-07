@@ -11,6 +11,7 @@ import cs2Icon from "../../assets/cs2.png";
 import commoditiesIcon from "../../assets/commodities.png";
 import currenciesIcon from "../../assets/currencies.png";
 import binIcon from "../../assets/bin.png";
+import AddItemModal from "./AddItemModal";
 import axios from 'axios';
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
@@ -161,18 +162,7 @@ const DashBoard = () => {
 				<button className={styles.removeButton}>
 					<img src={binIcon} alt="Remove" className={styles.binIcon} /> Remove
 				</button>
-			{isModalOpen && (
-				<div className={styles.modalOverlay}>
-					<div className={styles.modal}>
-						<button className={styles.closeButton} onClick={closeModal}>
-						&times;
-						</button>
-						<div className={styles.modalContent}>
-						{/* modal content here */}
-						</div>
-					</div>
-				</div>
-			)}
+			<AddItemModal isOpen={isModalOpen} onClose={closeModal} />
 			</div>
 			
 			<div className={styles.tabsContainer}>
