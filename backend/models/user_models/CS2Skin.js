@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { userConn } = require('../../config/database'); 
+const { Schema } = require('mongoose');
 
 const cs2SkinSchema = new Schema({
     skinName: { type: String, required: true },
@@ -9,4 +9,4 @@ const cs2SkinSchema = new Schema({
     currentValue: { type: Number, required: true },
 });
 
-module.exports = mongoose.model('CS2Skin', cs2SkinSchema);
+module.exports = userConn.model('CS2Skin', cs2SkinSchema);

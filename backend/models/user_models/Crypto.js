@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const { userConn } = require('../../config/database'); 
+const { Schema } = require('mongoose');
 
-const cryptoSchema = new mongoose.Schema({
+const cryptoSchema = new Schema({
     symbol: { type: String, required: true },
     amount: { type: Number, required: true },
     purchaseUnitPrice: { type: Number, required: true },
@@ -8,4 +9,4 @@ const cryptoSchema = new mongoose.Schema({
     currentValue: { type: Number, required: true },
 });
   
-module.exports = mongoose.model('Crypto', cryptoSchema);
+module.exports = userConn.model('Crypto', cryptoSchema);

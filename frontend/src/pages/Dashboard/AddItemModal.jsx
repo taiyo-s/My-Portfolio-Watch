@@ -45,10 +45,18 @@
         setResults([]);
         setSelectedAsset(null);
 
+        const assetSearchEndpoints = {
+            crypto: process.env.REACT_APP_CRYPTO_SEARCH,
+        };
+    
         try {
-        const { data } = await axios.get("/api/assets/search", {
-            params: { type, q: keyword.trim() },
+        const url = assetSearchEndpoints[type];
+    
+        const { data } = await axios.get(url, {
+            params: type in assetSearchEndpoints ? { q: keyword.trim() }
+                : { type, q: keyword.trim() },
         });
+    
         setResults(data);
         setSearched(true);
         } catch (err) {
@@ -118,7 +126,7 @@
                         selectedAsset?._id === asset._id ? styles.selected : undefined
                         }
                     >
-                        {asset.symbol} – {asset.name}
+                        {asset.symbol} - {asset.name}
                     </li>
                     ))}
                 </ul>

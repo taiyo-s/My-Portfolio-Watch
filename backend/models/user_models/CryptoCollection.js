@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { userConn } = require('../../config/database'); 
+const { Schema } = require('mongoose');
 
 const cryptoCollectionSchema = new Schema({
     cryptoCollection: [{ type: Schema.Types.ObjectId, ref: 'Crypto' }],
@@ -7,4 +7,4 @@ const cryptoCollectionSchema = new Schema({
     startValue: { type: Number },
 });
 
-module.exports = mongoose.model('CryptoCollection', cryptoCollectionSchema);
+module.exports = userConn.model('CryptoCollection', cryptoCollectionSchema);

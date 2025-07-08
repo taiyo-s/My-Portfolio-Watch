@@ -7,7 +7,7 @@ exports.getUserData = async (req, res) => {
         success: true,
         name: user.name,
         portfolioValue: user.overallValue,
-        valueHistory:  user.valueHistory,
-        updatedAt:     user.updatedAt
+        valueHistory: user.valueHistory,
+        updatedAt: user.updatedAt
     });
 };

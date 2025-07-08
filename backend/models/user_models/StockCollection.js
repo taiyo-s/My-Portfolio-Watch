@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { userConn } = require('../../config/database'); 
+const { Schema } = require('mongoose');
 
 const stockCollectionSchema = new Schema({
     stockCollection: [{ type: Schema.Types.ObjectId, ref: 'Stock' }],
@@ -7,4 +7,4 @@ const stockCollectionSchema = new Schema({
     startValue: { type: Number },
 });
 
-module.exports = mongoose.model('StockCollection', stockCollectionSchema);
+module.exports = userConn.model('StockCollection', stockCollectionSchema);

@@ -1,1 +1,1 @@
-require("./priceUpdaterJob");
+require("./cryptoPriceUpdater");

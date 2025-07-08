@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { userConn } = require('../../config/database'); 
+const { Schema } = require('mongoose');
 
 const userSchema = new Schema({
     name: { type: String, required: true },
@@ -15,4 +15,4 @@ const userSchema = new Schema({
     cs2SkinCollection: { type: Schema.Types.ObjectId, ref: 'CS2SkinCollection' },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = userConn.model("User", userSchema);

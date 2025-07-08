@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const { userConn } = require('../../config/database'); 
+const { Schema } = require('mongoose');
 
 const stockSchema = new mongoose.Schema({
     ticker: { type: String, required: true },
@@ -8,4 +9,4 @@ const stockSchema = new mongoose.Schema({
     currentValue: { type: Number, required: true },
 });
 
-module.exports = mongoose.model('Stock', stockSchema);
+module.exports = userConn.model('Stock', stockSchema);
