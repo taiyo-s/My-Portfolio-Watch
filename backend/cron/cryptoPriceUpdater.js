@@ -44,11 +44,11 @@ async function updateCrypto() {
 	await CryptoPrice.bulkWrite(ops, { ordered: false });
 	console.log(`${new Date().toISOString()} Updated ${ops.length} crypto`);
 	} catch (err) {
-	console.error('CoinMarketCap fetch failed:', err);
+	console.error('CoinMarketCap fetch failed:', err.message);
 	}
 }
 
 // Run every 10 minutes
-cron.schedule('*/1 * * * *', updateCrypto);
+cron.schedule('*/10 * * * *', updateCrypto);
 
 module.exports = updateCrypto;
