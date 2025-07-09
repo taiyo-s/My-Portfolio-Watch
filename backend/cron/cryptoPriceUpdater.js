@@ -55,5 +55,5 @@ async function updateCrypto() {
 }
 
 // run every 10 mins
-cron.schedule('0 */1 * * * *', updateCrypto);
+cron.schedule('0 */10 * * * *', updateCrypto);
 module.exports = updateCrypto;
