@@ -28,8 +28,8 @@
         setSearched(false);
         onClose(); 
     };
-    const next    = () => setStep((s) => s + 1);
-    const back    = () => setStep((s) => s - 1);
+    const next = () => setStep((s) => s + 1);
+    const back = () => setStep((s) => s - 1);
 
     const valid =
         (step === 1 && type) ||
@@ -140,34 +140,51 @@
 
         case 3:
             return (
-            <>
+                <>
                 <h3>Purchase details</h3>
-                <input
-                type="number"
-                placeholder="Amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                />
-                <input
-                type="number"
-                placeholder="Price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                />
-            </>
+            
+                {/* Amount field */}
+                <div className={styles.field}>
+                    <label htmlFor="amount">Amount</label>
+                    <input
+                    id="amount"
+                    type="number"
+                    className={styles.inputLarge}
+                    placeholder="0"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    />
+                </div>
+            
+                {/* Price field */}
+                <div className={styles.field}>
+                    <label htmlFor="price">Price</label>
+                    <input
+                    id="price"
+                    type="number"
+                    className={styles.inputLarge}
+                    placeholder="0.00"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    />
+                </div>
+                </>
             );
 
-        case 4:
-            return (
-            <>
-                <h3>Review</h3>
-                <p>Type: {type}</p>
-                <p>Symbol: {selectedAsset.symbol}</p>
-                <p>Amount: {amount}</p>
-                <p>Price: {price}</p>
-                <button onClick={handleSubmit}>Add to portfolio</button>
-            </>
-            );
+            case 4: {
+                const displayType = type ? type[0].toUpperCase() + type.slice(1) : "";
+                
+                return (
+                    <>
+                    <h3>Review</h3>
+                    <p>Type: {displayType}</p>
+                    <p>Symbol: {selectedAsset.symbol}</p>
+                    <p>Amount: {amount}</p>
+                    <p>Price: {price}</p>
+                    <button onClick={handleSubmit}>Add to portfolio</button>
+                    </>
+                );
+                }
 
         default:
             return null;

@@ -12,6 +12,10 @@ async function fetchTop50() {
 		  per_page: 50,
 		  page: 1,
 		},
+		headers: {
+			'x-cg-api-key': process.env.COIN_GECKO_KEY,
+			accept: 'application/json',
+		},
 		timeout: 10000,
 	  	},
 	);
@@ -51,5 +55,5 @@ async function updateCrypto() {
 }
 
 // run every 10 mins
-cron.schedule('0 */10 * * * *', updateCrypto);
+cron.schedule('0 */1 * * * *', updateCrypto);
 module.exports = updateCrypto;
