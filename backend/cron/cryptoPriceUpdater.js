@@ -14,6 +14,7 @@ async function fetchTop50() {
 		},
 		headers: {
 			'x-cg-demo-api-key': process.env.COIN_GECKO_KEY,
+			'User-Agent': 'MyPortfolioWatch/1.0',
 			accept: 'application/json',
 		},
 		timeout: 10000,
@@ -55,5 +56,5 @@ async function updateCrypto() {
 }
 
 // run every 10 mins
-cron.schedule('0 */10 * * * *', updateCrypto);
+cron.schedule('0 */1 * * * *', updateCrypto);
 module.exports = updateCrypto;
