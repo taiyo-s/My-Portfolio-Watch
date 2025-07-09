@@ -13,7 +13,7 @@ async function fetchTop50() {
 		  page: 1,
 		},
 		headers: {
-			'x-cg-api-key': process.env.COIN_GECKO_KEY,
+			'x-cg-demo-api-key': process.env.COIN_GECKO_KEY,
 			accept: 'application/json',
 		},
 		timeout: 10000,
