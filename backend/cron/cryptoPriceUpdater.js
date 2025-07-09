@@ -13,8 +13,7 @@ async function fetchTop50() {
 		  page: 1,
 		},
 		headers: {
-			'x-cg-demo-api-key': process.env.COIN_GECKO_KEY,
-			'User-Agent': 'MyPortfolioWatch/1.0',
+			'x_cg_demo_api_key': process.env.COIN_GECKO_KEY,
 			accept: 'application/json',
 		},
 		timeout: 10000,
