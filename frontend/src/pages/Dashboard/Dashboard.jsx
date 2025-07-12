@@ -25,6 +25,7 @@ const DashBoard = () => {
 	const [tabState, setTabstate] = useState(0);
 	const navigate = useNavigate();
 	const [isModalOpen, setModalOpen] = useState(false);
+	const [cryptoHoldings, setCryptoHoldings] = useState([]);
 
 	const change = 0;
 
@@ -37,35 +38,67 @@ const DashBoard = () => {
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-		  	if (token) {
-				try {
-					const response = await axios.get(process.env.REACT_APP_API_BASE, {
-						headers: {
-							'Authorization': `Bearer ${token}`, 
-						},
-					});
-			  		if (response.data.success) {
-						setName(response.data.name);
-						setPortfolioValue(response.data.portfolioValue);
-						setValueHistory(response.data.valueHistory);
-						setUpdatedAt(response.data.updatedAt);
-			  		} 
-					else {
-						console.error('Error fetching username', response.data.message);
-						navigate('/login');
-					}
-				} 
-				catch (error) {
-			 		console.error('Error fetching user data:', error);	
-					navigate('/login');					
+			if (!token) {
+			  navigate('/login');
+			  return;
+			}
+			try {
+				const headers = {
+					Authorization: `Bearer ${token}`,
+				};
+			
+				// 1. Fetch user profile info
+				const profileRes = await axios.get(process.env.REACT_APP_API_BASE, {
+					headers: headers,
+				});
+			
+				if (profileRes.data.success) {
+					setName(profileRes.data.name);
+					setPortfolioValue(profileRes.data.portfolioValue);
+					setValueHistory(profileRes.data.valueHistory);
+					setUpdatedAt(profileRes.data.updatedAt);
+				} else {
+					console.error('Error fetching user data:', profileRes.data.message);
+					navigate('/login');
+					return;
 				}
-		  	}
-			else {
-				navigate('/login');	
+			
+				// 2. Fetch crypto holdings
+				const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, {
+					headers: headers,
+				});
+			
+				if (cryptoRes.data.success) {
+					setCryptoHoldings(cryptoRes.data.holdings); 
+				} else {
+					console.warn("No crypto holdings found.");
+				}
+			} catch (error) {
+				console.error('Error fetching user data:', error);
+				navigate('/login');
 			}
 		};
 		fetchUserData();
 	}, [navigate, token]); 
+
+	const refetchHoldings = async () => {
+        try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+    
+        const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, {
+            headers,
+        });
+    
+        if (cryptoRes.data.success) {
+            setCryptoHoldings(cryptoRes.data.holdings);
+        }
+        } catch (error) {
+        console.error("Failed to refetch crypto holdings:", error);
+        }
+    };
 
 	const handleLogout = () => {
 		localStorage.removeItem('authToken');
@@ -162,7 +195,11 @@ const DashBoard = () => {
 				<button className={styles.removeButton}>
 					<img src={binIcon} alt="Remove" className={styles.binIcon} /> Remove
 				</button>
-			<AddItemModal isOpen={isModalOpen} onClose={closeModal} />
+				<AddItemModal
+					isOpen={isModalOpen}
+					onClose={closeModal}
+					onSuccess={refetchHoldings}
+				/>
 			</div>
 			
 			<div className={styles.tabsContainer}>
@@ -192,8 +229,30 @@ const DashBoard = () => {
 				<div className={styles.tabContent}>
 					<div className={tabState === 0 ? `${styles.activeContent} ${styles.content}` : 
 						styles.content}>Hi 0</div>
-					<div className={tabState === 1 ? `${styles.activeContent} ${styles.content}` : 
-						styles.content}>Hi 1</div>
+					<div className={tabState === 1 ? `${styles.activeContent} ${styles.content}` : styles.content}>
+						{cryptoHoldings.length === 0 ? ( 
+							<p>No crypto assets yet.</p>
+						) : (
+							<ul className={styles.holdingList}>
+							<li className={styles.holdingHeader}>
+								<span>Symbol</span>
+								<span>Amount</span>
+								<span>Bought at</span>
+								<span>Current</span>
+								<span>Value</span>
+							</li>
+							{cryptoHoldings.map((c) => (
+								<li key={c._id} className={styles.holdingItem}>
+								<span>{c.symbol.toUpperCase()}</span>
+								<span>{c.amount}</span>
+								<span>${Number(c.purchaseUnitPrice).toFixed(2)}</span>
+								<span>${Number(c.currentUnitPrice).toFixed(2)}</span>
+								<span>${Number(c.currentValue).toFixed(2)}</span>
+								</li>
+							))}
+							</ul>
+						)}
+					</div>
 					<div className={tabState === 2 ? `${styles.activeContent} ${styles.content}` : 
 						styles.content}>Hi 2</div>
 					<div className={tabState === 3 ? `${styles.activeContent} ${styles.content}` : 

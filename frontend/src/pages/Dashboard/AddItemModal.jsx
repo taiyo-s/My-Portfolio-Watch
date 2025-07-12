@@ -2,7 +2,7 @@
     import axios from "axios";
     import styles from "./AddItemModal.module.css";
 
-    const AddItemModal = ({ isOpen, onClose }) => {
+    const AddItemModal = ({ isOpen, onClose, onSuccess }) => {
     /* ────── state ────── */
     const [step, setStep]           = useState(1);
     const [type, setType]           = useState("");   // "stock" | "crypto"
@@ -68,13 +68,23 @@
 
     const handleSubmit = async () => {
         const payload = {
-        type,
-        assetId: selectedAsset._id,
-        amount,
-        price,
+            type,
+            assetId: selectedAsset._id,
+            amount,
+            price,
         };
-        await axios.post("/api/portfolio/add", payload);
-        close();
+        try {
+            const token = localStorage.getItem("authToken");
+            await axios.post(process.env.REACT_APP_ASSET_ADD, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (onSuccess) onSuccess();
+            close();
+        } catch (err) {
+            console.error("Error adding asset:", err);
+        }
     };
 
     /* ────── step content ────── */
@@ -139,6 +149,7 @@
             );
 
         case 3:
+            const estimatedValue = parseFloat(amount || 0) * parseFloat(price || 0);
             return (
                 <>
                 <h3>Purchase details</h3>
@@ -167,6 +178,9 @@
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     />
+                </div>
+                <div className={styles.estimatedValue}>
+                    Estimated Value: ${isNaN(estimatedValue) ? "0.00" : estimatedValue.toFixed(2)}
                 </div>
                 </>
             );

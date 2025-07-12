@@ -12,6 +12,7 @@ app.use(cors({ origin: process.env.FRONTEND, credentials: true }));
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/userRoutes"));
 app.use("/api", require("./routes/cryptoRoutes"));
+app.use("/api", require("./routes/portfolioRoutes"));
 app.head(process.env.PING, (_, res) => {
     console.log('Server is up and running');
     res.status(200).end();
