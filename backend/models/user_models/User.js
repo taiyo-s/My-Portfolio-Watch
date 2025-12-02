@@ -1,3 +1,8 @@
+/**
+ * Mongoose model for user accounts and portfolio references.
+ * Uses userConn for database access and links to stock, crypto, and CS2 skin collections.
+ */
+
 const { userConn } = require('../../config/database'); 
 const { Schema } = require('mongoose');
 

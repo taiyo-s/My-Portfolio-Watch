@@ -1,3 +1,8 @@
+/**
+ * Express router for authentication endpoints.
+ * Connects HTTP routes to authController methods.
+ */
+
 const router = require("express").Router();
 const auth = require("../controllers/authController");
 

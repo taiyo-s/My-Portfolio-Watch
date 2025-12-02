@@ -1,3 +1,8 @@
+/**
+ * Handles user data retrieval and portfolio recalculation.
+ * Uses User model and portfolioService for up-to-date portfolio info.
+ */
+
 const User = require("../models/user_models/User");
 const { recalculateUserPortfolio } = require("../services/portfolioService");
 

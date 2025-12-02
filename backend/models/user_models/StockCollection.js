@@ -1,3 +1,8 @@
+/**
+ * Mongoose model for storing a user's collection of stock holdings.
+ * Uses userConn for database access and references Stock documents.
+ */
+
 const { userConn } = require('../../config/database'); 
 const { Schema } = require('mongoose');
 

@@ -1,3 +1,8 @@
+/**
+ * Handles user authentication: signup, login, and token verification.
+ * Interacts with user and collection models, and uses JWT for session management.
+ */
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user_models/User");

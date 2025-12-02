@@ -1,3 +1,8 @@
+/**
+ * Service for recalculating and updating user portfolio values.
+ * Uses Crypto and CryptoPrice models to update holdings and value history.
+ */
+
 const Crypto = require("../models/user_models/Crypto");
 const CryptoPrice = require("../models/price_models/CryptoPrice");
 
@@ -12,13 +17,15 @@ async function recalculateUserPortfolio(user, { isCron = false } = {}) {
 
 		const crypto = await CryptoPrice.findOne({ symbol: holding.symbol.toUpperCase() });
 		if (!crypto) continue;
-		
+
+		const newPrice = crypto.price;
+		const newValue = holding.amount * newPrice;
 		await Crypto.findByIdAndUpdate(holding._id, {
-			currentUnitPrice: crypto.price,
-			currentValue: holding.amount * crypto.price,
+			currentUnitPrice: newPrice,
+			currentValue: newValue,
 		});
 
-		totalValue += holding.currentValue;
+		totalValue += newValue;
 	}
 
 	user.overallValue = totalValue;

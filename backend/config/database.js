@@ -1,3 +1,8 @@
+/**
+ * Sets up and exports Mongoose connections for user data and asset prices databases.
+ * Used by models and services that require database access.
+ */
+
 const mongoose = require("mongoose");
 require("dotenv").config();
 

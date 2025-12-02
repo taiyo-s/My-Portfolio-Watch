@@ -1,3 +1,8 @@
+/**
+ * Mongoose model for storing cryptocurrency price data.
+ * Uses assetPricesConnection and supports text search on symbol and name.
+ */
+
 const mongoose = require("mongoose");
 const { assetPricesConnection } = require("../../config/database"); 
 

@@ -1,3 +1,8 @@
+/**
+ * Handles portfolio operations such as adding assets and retrieving crypto holdings.
+ * Interacts with user, crypto, and collection models.
+ */
+
 const User = require('../models/user_models/User');
 const Crypto = require('../models/user_models/Crypto');
 const CryptoCollection = require('../models/user_models/CryptoCollection');

@@ -1,3 +1,8 @@
+/**
+ * Mongoose model for storing a user's collection of crypto holdings.
+ * Uses userConn for database access and references Crypto documents.
+ */
+
 const { userConn } = require('../../config/database'); 
 const { Schema } = require('mongoose');
 

@@ -1,3 +1,8 @@
+/**
+ * Handles crypto search API endpoint.
+ * Uses CryptoPrice model to find and return matching cryptocurrencies.
+ */
+
 const CryptoPrice = require("../models/price_models/CryptoPrice");
 
 /**

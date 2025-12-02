@@ -1,3 +1,8 @@
+/**
+ * Main server entry point. Sets up Express app, middleware, routes, and loads cron jobs.
+ * Connects to database and starts the HTTP server.
+ */
+
 const express = require("express");
 const cors = require("cors");
 require('dotenv').config({path: '.env'});

@@ -1,3 +1,8 @@
+/**
+ * Mongoose model for storing a user's collection of CS2 skin holdings.
+ * Uses userConn for database access and references CS2Skin documents.
+ */
+
 const { userConn } = require('../../config/database'); 
 const { Schema } = require('mongoose');
 

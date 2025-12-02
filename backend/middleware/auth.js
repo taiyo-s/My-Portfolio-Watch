@@ -1,3 +1,8 @@
+/**
+ * Express middleware for JWT authentication.
+ * Verifies token and attaches userId to the request object.
+ */
+
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {

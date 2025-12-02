@@ -1,3 +1,8 @@
+/**
+ * Express router for cryptocurrency search endpoint.
+ * Connects HTTP route to cryptoController search method.
+ */
+
 const router = require("express").Router();
 const cryptoCtl = require("../controllers/cryptoController");
 

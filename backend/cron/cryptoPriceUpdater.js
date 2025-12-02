@@ -1,8 +1,14 @@
-const cron        = require('node-cron');
-const axios       = require('axios');
+/**
+ * Schedules a cron job to update top 50 crypto prices from CoinMarketCap every 10 minutes.
+ * Uses CryptoPrice model to store and upsert price data.
+ */
+
+const cron = require('node-cron');
+const axios = require('axios');
 const CryptoPrice = require('../models/price_models/CryptoPrice');
 
 const CMC_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
+const COINMARKETCAP_KEY = process.env.COINMARKETCAP_KEY;
 
 async function fetchTop50() {
 	const { data } = await axios.get(CMC_URL, {
@@ -14,7 +20,7 @@ async function fetchTop50() {
 		convert : 'USD',
 		},
 		headers: {
-		'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_KEY, 
+		'X-CMC_PRO_API_KEY': COINMARKETCAP_KEY, 
 		},
 	});
 
@@ -48,7 +54,7 @@ async function updateCrypto() {
 	}
 }
 
-// Run every 10 minutes
-cron.schedule('*/10 * * * *', updateCrypto);
+// Run every 20 minutes on minute 15, 35, ...
+cron.schedule('15,35,55 * * * *', updateCrypto);
 
 module.exports = updateCrypto;
