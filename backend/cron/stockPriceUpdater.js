@@ -34,7 +34,7 @@ async function fetchSP500Tickers() {
 // Fetch extra tickers from MongoDB
 async function fetchExtraTickers() {
     const docs = await ExtraStock.find().lean();
-    return docs.map(d => d._id);
+    return docs.map(d => d.ticker);
 }
 
 // Fetch Finnhub company profile (exchange & currency)
@@ -99,7 +99,6 @@ try {
                 upsert: true
             }
             });
-            console.log(profile.name);
         }
 
         // Delay to stay under Finnhub free-tier limits (~60/min)
