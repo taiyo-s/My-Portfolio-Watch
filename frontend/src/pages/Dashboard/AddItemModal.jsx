@@ -30,12 +30,20 @@
     };
     const next = () => setStep((s) => s + 1);
     const back = () => {
+        // Handle step-specific resets
+        if (step === 2) {
+            // Going back from search → clear search-related state
+            setKeyword("");
+            setResults([]);
+            setSelectedAsset(null);
+            setSearched(false);
+        } else if (step === 3) {
+            // Going back from purchase details → clear purchase inputs
+            setAmount("");
+            setPrice("");
+        }
         setStep((s) => s - 1);
-        setKeyword("");
-        setResults([]);
-        setSelectedAsset(null);
-        setSearched(false);
-      };
+    };
 
     const valid =
         (step === 1 && type) ||
@@ -164,10 +172,11 @@
 
         case 3:
             const estimatedValue = parseFloat(amount || 0) * parseFloat(price || 0);
+            const assetName = selectedAsset?.name;
             return (
                 <>
-                <h3>Purchase details</h3>
-            
+                <h3>Purchase details for {assetName}</h3>
+                
                 {/* Amount field */}
                 <div className={styles.field}>
                     <label htmlFor="amount">Amount</label>
