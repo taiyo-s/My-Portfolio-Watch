@@ -8,7 +8,7 @@ const { assetPricesConnection } = require("../../config/database");
 
 const StockPriceSchema = new mongoose.Schema({
     _id: { type: String, required: true }, 
-    ticker: { type: String, required: true, unique: true},
+    ticker: { type: String, required: true},
     name: { type: String, required: true },
     price: { type: Number, required: true },
     exchange: { type: String },

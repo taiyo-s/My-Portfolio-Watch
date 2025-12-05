@@ -6,7 +6,7 @@
 const { userConn } = require('../../config/database'); 
 const { Schema } = require('mongoose');
 
-const stockSchema = new mongoose.Schema({
+const stockSchema = new Schema({
     ticker: { type: String, required: true },
     amount: { type: Number, required: true },
     purchaseUnitPrice: { type: Number, required: true },

@@ -64,25 +64,25 @@ const DashBoard = () => {
 					return;
 				}
 			
-				// Fetch crypto holdings
-				const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, {
-					headers: headers,
-				});
-			
-				if (cryptoRes.data.success) {
-					setCryptoHoldings(cryptoRes.data.holdings); 
-				} else {
-					console.warn("No crypto holdings found.");
-				}
-
-				// Fetch stock holdings
-				const stockRes = await axios.get(process.env.REACT_APP_GET_STOCK_HOLDINGS, { 
-					headers: headers,
-				});
-				if (stockRes.data.success) {
-					setStockHoldings(stockRes.data.holdings);
-				} else {
-					console.warn("No stock holdings found.");
+				// Fetch holdings
+				try {
+					const holdingsRes = await axios.get(
+						process.env.REACT_APP_GET_HOLDINGS,
+						{ headers }
+					);
+				
+					const holdings = holdingsRes.data?.holdings || {};
+				
+					setCryptoHoldings(holdings.crypto || []);
+					setStockHoldings(holdings.stocks || []);
+				
+				} catch (err) {
+					console.error("Failed to fetch holdings:", err);
+				
+					setCryptoHoldings([]);
+					setStockHoldings([]);
+				 
+					console.warn("Failed to load your portfolio. Please try again.");
 				}
 
 			} catch (error) {
