@@ -54,7 +54,7 @@ const DashBoard = () => {
 		  setCryptoHoldings([]);
 		  setStockHoldings([]);
 		}
-	  }, [token]);
+	}, [token]);
 
 	useEffect(() => {
 		const fetchUserData = async () => {

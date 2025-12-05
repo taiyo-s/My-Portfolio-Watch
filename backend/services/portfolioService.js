@@ -32,7 +32,7 @@ async function recalculateUserPortfolio(user, { isCron = false } = {}) {
     }
 
     // --- Stock holdings ---
-    const stockHoldings = user.stockCollection?.stocks || [];
+    const stockHoldings = user.stockCollection?.stockCollection || [];
 
     for (const holding of stockHoldings) {
         const stockAsset = await StockPrice.findOne({ ticker: holding.ticker });
