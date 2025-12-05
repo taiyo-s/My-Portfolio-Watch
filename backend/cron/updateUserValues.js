@@ -10,12 +10,14 @@ const { recalculateUserPortfolio } = require("../services/portfolioService");
 
 async function updateAllUserPortfolios() {
   try {
-    const users = await User.find({}).populate({
-      path: "cryptoCollection",
-      populate: {
+    const users = await User.find({})
+    .populate({
         path: "cryptoCollection",
-        model: "Crypto",
-      },
+        populate: { path: "cryptoCollection", model: "Crypto" }
+    })
+    .populate({
+        path: "stockCollection",
+        populate: { path: "stockCollection", model: "Stock" }
     });
 
     let updatedCount = 0;
@@ -31,7 +33,7 @@ async function updateAllUserPortfolios() {
   }
 }
 
-// Schedule it to run once a day at 12:00
-cron.schedule("0 12 * * *", updateAllUserPortfolios);
+// Schedule it to run once a day at 00:00
+cron.schedule("0 0 * * *", updateAllUserPortfolios);
 
 module.exports = updateAllUserPortfolios;

@@ -11,7 +11,8 @@ const StockPrice = require("../models/price_models/StockPrice");
 async function recalculateUserPortfolio(user, { isCron = false } = {}) {
     if (!user) return user;
 
-    let totalValue = 0;
+    let cryptoValue = 0;
+    let stockValue = 0;
 
     // --- Crypto holdings ---
     const cryptoHoldings = user.cryptoCollection?.cryptoCollection || [];
@@ -28,7 +29,7 @@ async function recalculateUserPortfolio(user, { isCron = false } = {}) {
             currentValue: newValue
         });
 
-        totalValue += newValue;
+        cryptoValue += newValue;
     }
 
     // --- Stock holdings ---
@@ -46,27 +47,23 @@ async function recalculateUserPortfolio(user, { isCron = false } = {}) {
             currentValue: newValue
         });
 
-        totalValue += newValue;
+        stockValue += newValue;
     }
 
     // --- Update user portfolio ---
+    const totalValue = stockValue + cryptoValue;
     user.overallValue = totalValue;
 
     if (isCron) {
         user.valueHistory.push(totalValue);
         user.updatedAt.push(new Date());
     } else {
-        if (user.valueHistory.length > 0) {
-            user.valueHistory[user.valueHistory.length - 1] = totalValue;
-        } else {
+        if (user.valueHistory.length == 0) {
             user.valueHistory.push(totalValue);
         }
-
-        if (user.updatedAt.length > 0) {
-            user.updatedAt[user.updatedAt.length - 1] = new Date();
-        } else {
+        if (user.updatedAt.length == 0) {
             user.updatedAt.push(new Date());
-        }
+        } 
     }
 
     await user.save();

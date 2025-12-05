@@ -29,6 +29,15 @@ const DashBoard = () => {
 	const [stockHoldings, setStockHoldings] = useState([]);
 
 	const change = 0;
+	const totalChange = 0;
+
+	const chartValues = valueHistory.length > 0
+	? [...valueHistory, portfolioValue]
+	: [portfolioValue];
+
+	const chartDates = updatedAt.length > 0
+	? [...updatedAt, new Date()]
+	: [new Date()];
 
 	const openModal = () => setModalOpen(true);
 	const closeModal = () => setModalOpen(false);
@@ -112,28 +121,47 @@ const DashBoard = () => {
 				<h2 className={styles.greetingText}>Hi {name}</h2>
 			</div>
 			<div className={styles.overallValue}>
-				<div className={styles.overallValueText}>${(portfolioValue).toFixed(2)}</div>
-				{change > 0 ? (
-  					<div className={styles.posPercentageChange}>
-    					+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%)
-  					</div>
-					) : change < 0 ? (
-  					<div className={styles.negPercentageChange}>
-    					-${Math.abs(change).toFixed(2)} ({((100 * change)/88).toFixed(2)}%)
-  					</div>
-					) : (
-  					<div className={styles.noPercentageChange}>
-    					+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%)
-  					</div>
-				)}
+			<div className={styles.overallValueText}>
+				${portfolioValue.toFixed(2)}
+			</div>
+
+			{/* --- DAILY CHANGE --- */}
+			{change > 0 ? (
+				<div className={styles.posPercentageChange}>
+				+${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%) Day
+				</div>
+			) : change < 0 ? (
+				<div className={styles.negPercentageChange}>
+				-${Math.abs(change).toFixed(2)} ({((100 * change) / 88).toFixed(2)}%) Day
+				</div>
+			) : (
+				<div className={styles.noPercentageChange}>
+				${change.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%) Day
+				</div>
+			)}
+
+			{/* --- TOTAL CHANGE --- */}
+			{totalChange > 0 ? (
+				<div className={styles.posPercentageChange}>
+				+${totalChange.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%) Total
+				</div>
+			) : totalChange < 0 ? (
+				<div className={styles.negPercentageChange}>
+				-${Math.abs(totalChange).toFixed(2)} ({((100 * change) / 88).toFixed(2)}%) Total
+				</div>
+			) : (
+				<div className={styles.noPercentageChange}>
+				${totalChange.toFixed(2)} ({((100 * change) / 88).toFixed(2)}%) Total
+				</div>
+			)}
 			</div>
 			<div className={styles.chartContainer}>
 				<div className={styles.lineChart}>
 					<Line
 						data={{
-							labels: updatedAt.map(date => format(new Date(date), 
+							labels: chartDates.map(date => format(new Date(date), 
 								'dd/MM/yyyy')),
-							datasets: [{ data: valueHistory }],
+							datasets: [{ data: chartValues }],
 						}}
 						options={{
 							responsive: true,
