@@ -5,4 +5,4 @@
 require("./cryptoPriceUpdater");
 require("./stockPriceUpdater");
 require("./weeklyStockUpdater");
-//require("./updateUserValues");
+require("./updateUserValues");
