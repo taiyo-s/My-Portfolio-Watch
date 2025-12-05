@@ -8,6 +8,7 @@ const { assetPricesConnection } = require("../../config/database");
 
 const ExtraStockSchema = new mongoose.Schema({
     _id: { type: String, required: true },   // the ticker symbol, e.g. "LUNR"
+    ticker: { type: String }, 
     name: { type: String },   
 });
 

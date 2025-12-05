@@ -26,6 +26,7 @@ const DashBoard = () => {
 	const navigate = useNavigate();
 	const [isModalOpen, setModalOpen] = useState(false);
 	const [cryptoHoldings, setCryptoHoldings] = useState([]);
+	const [stockHoldings, setStockHoldings] = useState([]);
 
 	const change = 0;
 
@@ -63,7 +64,7 @@ const DashBoard = () => {
 					return;
 				}
 			
-				// 2. Fetch crypto holdings
+				// Fetch crypto holdings
 				const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, {
 					headers: headers,
 				});
@@ -73,6 +74,17 @@ const DashBoard = () => {
 				} else {
 					console.warn("No crypto holdings found.");
 				}
+
+				// Fetch stock holdings
+				const stockRes = await axios.get(process.env.REACT_APP_GET_STOCK_HOLDINGS, { 
+					headers: headers,
+				});
+				if (stockRes.data.success) {
+					setStockHoldings(stockRes.data.holdings);
+				} else {
+					console.warn("No stock holdings found.");
+				}
+
 			} catch (error) {
 				console.error('Error fetching user data:', error);
 				navigate('/login');
@@ -88,13 +100,12 @@ const DashBoard = () => {
             Authorization: `Bearer ${token}`,
         };
     
-        const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, {
-            headers,
-        });
-    
-        if (cryptoRes.data.success) {
-            setCryptoHoldings(cryptoRes.data.holdings);
-        }
+        const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, { headers });
+        if (cryptoRes.data.success) setCryptoHoldings(cryptoRes.data.holdings);
+
+        const stockRes = await axios.get(process.env.REACT_APP_GET_STOCK_HOLDINGS, { headers });
+        if (stockRes.data.success) setStockHoldings(stockRes.data.holdings);
+
         } catch (error) {
         console.error("Failed to refetch crypto holdings:", error);
         }
@@ -167,7 +178,7 @@ const DashBoard = () => {
 							datasets: [
 								{
 									label: 'Value of Holdings',
-									data: [7, 5, 8, 3, 4],
+									data: [1, 1, 0, 0, 0],
 									backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
 								},
 							],
@@ -227,8 +238,30 @@ const DashBoard = () => {
 
 				</div>
 				<div className={styles.tabContent}>
-					<div className={tabState === 0 ? `${styles.activeContent} ${styles.content}` : 
-						styles.content}>Hi 0</div>
+					<div className={tabState === 0 ? `${styles.activeContent} ${styles.content}` : styles.content}>
+						{stockHoldings.length === 0 ? (
+							<p>No stock assets yet.</p>
+						) : (
+							<ul className={styles.holdingList}>
+								<li className={styles.holdingHeader}>
+									<span>Ticker</span>
+									<span>Amount</span>
+									<span>Bought at</span>
+									<span>Current</span>
+									<span>Value</span>
+								</li>
+								{stockHoldings.map((s) => (
+									<li key={s._id} className={styles.holdingItem}>
+										<span>{s.ticker}</span>
+										<span>{s.amount}</span>
+										<span>${Number(s.purchaseUnitPrice).toFixed(2)}</span>
+										<span>${Number(s.currentUnitPrice).toFixed(2)}</span>
+										<span>${Number(s.currentValue).toFixed(2)}</span>
+									</li>
+								))}
+							</ul>
+						)}
+					</div>
 					<div className={tabState === 1 ? `${styles.activeContent} ${styles.content}` : styles.content}>
 						{cryptoHoldings.length === 0 ? ( 
 							<p>No crypto assets yet.</p>

@@ -47,14 +47,14 @@
 
         const assetSearchEndpoints = {
             crypto: process.env.REACT_APP_CRYPTO_SEARCH,
+            stock: process.env.REACT_APP_STOCK_SEARCH,
         };
     
         try {
         const url = assetSearchEndpoints[type];
     
         const { data } = await axios.get(url, {
-            params: type in assetSearchEndpoints ? { q: keyword.trim() }
-                : { type, q: keyword.trim() },
+            params: { q: keyword.trim() },
         });
     
         setResults(data);
