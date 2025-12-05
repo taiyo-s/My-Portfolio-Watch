@@ -37,6 +37,25 @@ const DashBoard = () => {
 		setTabstate(tabNum);
 	}
 
+	const fetchHoldings = React.useCallback(async () => {
+		if (!token) return;
+	  
+		const headers = { Authorization: `Bearer ${token}` };
+	  
+		try {
+		  const cryptoRes = await axios.post(process.env.REACT_APP_GET_HOLDINGS, { type: 'crypto' }, { headers });
+		  setCryptoHoldings(cryptoRes.data.holdings || []);
+	  
+		  const stockRes = await axios.post(process.env.REACT_APP_GET_HOLDINGS, { type: 'stock' }, { headers });
+		  setStockHoldings(stockRes.data.holdings || []);
+	  
+		} catch (err) {
+		  console.error("Failed to fetch holdings:", err);
+		  setCryptoHoldings([]);
+		  setStockHoldings([]);
+		}
+	  }, [token]);
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			if (!token) {
@@ -48,7 +67,7 @@ const DashBoard = () => {
 					Authorization: `Bearer ${token}`,
 				};
 			
-				// 1. Fetch user profile info
+				// Fetch user profile info
 				const profileRes = await axios.get(process.env.REACT_APP_API_BASE, {
 					headers: headers,
 				});
@@ -65,25 +84,7 @@ const DashBoard = () => {
 				}
 			
 				// Fetch holdings
-				try {
-					const holdingsRes = await axios.get(
-						process.env.REACT_APP_GET_HOLDINGS,
-						{ headers }
-					);
-				
-					const holdings = holdingsRes.data?.holdings || {};
-				
-					setCryptoHoldings(holdings.crypto || []);
-					setStockHoldings(holdings.stocks || []);
-				
-				} catch (err) {
-					console.error("Failed to fetch holdings:", err);
-				
-					setCryptoHoldings([]);
-					setStockHoldings([]);
-				 
-					console.warn("Failed to load your portfolio. Please try again.");
-				}
+				await fetchHoldings();
 
 			} catch (error) {
 				console.error('Error fetching user data:', error);
@@ -91,25 +92,7 @@ const DashBoard = () => {
 			}
 		};
 		fetchUserData();
-	}, [navigate, token]); 
-
-	const refetchHoldings = async () => {
-        try {
-        const token = localStorage.getItem("authToken");
-        const headers = {
-            Authorization: `Bearer ${token}`,
-        };
-    
-        const cryptoRes = await axios.get(process.env.REACT_APP_GET_CRYPTO_HOLDINGS, { headers });
-        if (cryptoRes.data.success) setCryptoHoldings(cryptoRes.data.holdings);
-
-        const stockRes = await axios.get(process.env.REACT_APP_GET_STOCK_HOLDINGS, { headers });
-        if (stockRes.data.success) setStockHoldings(stockRes.data.holdings);
-
-        } catch (error) {
-        console.error("Failed to refetch crypto holdings:", error);
-        }
-    };
+	}, [navigate, token, fetchHoldings]); 
 
 	const handleLogout = () => {
 		localStorage.removeItem('authToken');
@@ -209,7 +192,7 @@ const DashBoard = () => {
 				<AddItemModal
 					isOpen={isModalOpen}
 					onClose={closeModal}
-					onSuccess={refetchHoldings}
+					onSuccess={fetchHoldings}
 				/>
 			</div>
 			

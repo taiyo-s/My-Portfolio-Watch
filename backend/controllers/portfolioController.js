@@ -13,7 +13,8 @@ exports.addAsset = async (req, res, next) => {
 };
 
 exports.getHoldings = async (req, res, next) => {
-    if (req.query.type === 'crypto') return cryptoPortfolio.getCryptoHoldings(req, res, next);
-    if (req.query.type === 'stock') return stockPortfolio.getStockHoldings(req, res, next);
+    const { type } = req.body; 
+    if (type === 'crypto') return cryptoPortfolio.getCryptoHoldings(req, res, next);
+    if (type === 'stock') return stockPortfolio.getStockHoldings(req, res, next);
     return res.status(400).json({ error: 'Invalid type' });
 };

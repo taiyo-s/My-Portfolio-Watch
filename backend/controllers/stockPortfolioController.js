@@ -13,15 +13,15 @@ const StockPrice = require('../models/price_models/StockPrice');
  */
 exports.addStockToPortfolio = async (req, res) => {
     try {
-        const { ticker, amount, price } = req.body; // type handled by delegator
+        const { assetId, amount, price } = req.body; // assetId = StockPrice._id
         const userId = req.userId;
 
         // Fetch user with populated stock collection
         const user = await User.findById(userId).populate('stockCollection');
         if (!user) return res.status(404).json({ error: 'User not found' });
 
-        // Fetch stock asset from StockPrice
-        const stockAsset = await StockPrice.findOne({ ticker });
+        // Fetch stock asset by _id
+        const stockAsset = await StockPrice.findById(assetId);
         if (!stockAsset) return res.status(404).json({ error: 'Stock not found' });
 
         // Ensure the user has a stock collection
@@ -38,7 +38,7 @@ exports.addStockToPortfolio = async (req, res) => {
         const currentValue = amount * currentUnitPrice;
 
         const stockHolding = new Stock({
-            ticker: stockAsset.ticker,
+            ticker: stockAsset._id, // use _id as ticker
             amount,
             purchaseUnitPrice: price,
             currentUnitPrice,
@@ -48,7 +48,7 @@ exports.addStockToPortfolio = async (req, res) => {
         await stockHolding.save();
 
         // Add to user's stock collection
-        collection.stocks.push(stockHolding._id);
+        collection.stockCollection.push(stockHolding._id); // match schema field
         await collection.save();
 
         return res.json({ success: true, asset: stockHolding });
@@ -67,7 +67,7 @@ exports.getStockHoldings = async (req, res) => {
         const user = await User.findById(req.userId).populate({
             path: 'stockCollection',
             populate: {
-                path: 'stocks',
+                path: 'stockCollection', // matches schema field name
                 model: 'Stock'
             }
         });
@@ -76,7 +76,7 @@ exports.getStockHoldings = async (req, res) => {
             return res.json({ success: true, holdings: [] });
         }
 
-        const holdings = user.stockCollection.stocks || [];
+        const holdings = user.stockCollection.stockCollection || []; // match schema field
         return res.json({ success: true, holdings });
 
     } catch (err) {

@@ -29,7 +29,13 @@
         onClose(); 
     };
     const next = () => setStep((s) => s + 1);
-    const back = () => setStep((s) => s - 1);
+    const back = () => {
+        setStep((s) => s - 1);
+        setKeyword("");
+        setResults([]);
+        setSelectedAsset(null);
+        setSearched(false);
+      };
 
     const valid =
         (step === 1 && type) ||
@@ -136,7 +142,15 @@
                         selectedAsset?._id === asset._id ? styles.selected : undefined
                         }
                     >
-                        {asset.symbol} - {asset.name}
+                        {(() => {
+                            if (type === "stock") {
+                            return `${asset.ticker} - ${asset.name}`;
+                            } else if (type === "crypto") {
+                            return `${asset.symbol?.toUpperCase()} - ${asset.name}`;
+                            } else {
+                            return `${asset.name}`;
+                            }
+                        })()}
                     </li>
                     ))}
                 </ul>

@@ -3,7 +3,6 @@
  * Uses StockPrice models to fetch, update, and store stock data.
  */
 
-
 const cron = require('node-cron');
 const axios = require('axios');
 const StockPrice = require('../models/price_models/StockPrice');

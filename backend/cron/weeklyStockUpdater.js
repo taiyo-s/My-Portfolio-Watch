@@ -45,7 +45,7 @@ async function fetchExtraTickers() {
     return docs.map(d => d.ticker);
 }
 
-export async function weeklyUpdate() {
+async function weeklyUpdate() {
     try {
         console.log('Starting weekly S&P500 & profile update...');
 
@@ -78,7 +78,7 @@ export async function weeklyUpdate() {
                     }
                 });
 
-                console.log(`Stored new company profile: ${ticker} (${profile.name})`);
+                console.log(`Stored new company profile: ${ticker} (${newProfile.name})`);
             }
         }
 

@@ -11,6 +11,6 @@ const portfolioCtl = require("../controllers/portfolioController");
 router.post(process.env.ASSET_ADD, authMw, portfolioCtl.addAsset);
 
 // Get holdings for a specific type (crypto or stock)
-router.get(process.env.GET_HOLDINGS, authMw, portfolioCtl.getHoldings);
+router.post(process.env.GET_HOLDINGS, authMw, portfolioCtl.getHoldings);
 
 module.exports = router;
