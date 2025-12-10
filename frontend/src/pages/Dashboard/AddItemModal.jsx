@@ -210,12 +210,22 @@
 
             case 4: {
                 const displayType = type ? type[0].toUpperCase() + type.slice(1) : "";
+
+                let assetLabel = "";
+                let labelText = "";
+                if (type === "stock") {
+                    labelText = "Ticker";
+                    assetLabel = selectedAsset.ticker;
+                } else if (type === "crypto") {
+                    labelText = "Symbol";
+                    assetLabel = selectedAsset.symbol.toUpperCase();
+                }
                 
                 return (
                     <>
                     <h3>Review</h3>
                     <p>Type: {displayType}</p>
-                    <p>Symbol: {selectedAsset.symbol}</p>
+                    <p>{labelText}: {assetLabel}</p>
                     <p>Amount: {amount}</p>
                     <p>Price: {price}</p>
                     <button onClick={handleSubmit}>Add to portfolio</button>

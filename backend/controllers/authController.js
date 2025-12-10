@@ -24,7 +24,7 @@ exports.signup = async (req, res) => {
 
     const user = await User.create({
         name, username, password: hash,
-        overallValue: 0, startValue: 0, valueHistory: [0], updatedAt: [new Date()],
+        overallValue: 0, startValue: 0, valueHistory: [], updatedAt: [],
         lastVisit: new Date().toISOString().split("T")[0],
         stockCollection: newStocks._id,
         cryptoCollection: newCryptos._id,
